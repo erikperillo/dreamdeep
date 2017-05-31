@@ -4,10 +4,10 @@
 
 ### Dependencies
 You basically need:
-    .Python 3
-    .Lasagne
-    .Theano
-    .Numpy and all that numeric stuff.
+* Python 3
+* Lasagne
+* Theano
+* Numpy and all that numeric stuff.
 
 ### How to run
 1. Download pre-trained GoogLeNet file.
