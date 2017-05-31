@@ -1,3 +1,12 @@
+"""
+Net models.
+
+Pre-trained GoogleNet:
+https://s3.amazonaws.com/lasagne/recipes/pretrained/imagenet/blvc_googlenet.pkl
+
+Pre-trained VGG-16:
+https://s3.amazonaws.com/lasagne/recipes/pretrained/imagenet/vgg16.pkl
+"""
 import pickle
 
 import theano

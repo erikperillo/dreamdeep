@@ -10,7 +10,7 @@ You basically need:
 * Numpy and all that numeric stuff.
 
 ### How to run
-1. Download pre-trained GoogLeNet file.
+1. Download pre-trained [GoogLeNet](https://s3.amazonaws.com/lasagne/recipes/pretrained/imagenet/blvc_googlenet.pkl) file.
 1. Put the file path on dreamdeep.py (you'll know where!)
 1. Run python3 dreamdeep.py <image_filepath>
 1. Contemplate the result!
