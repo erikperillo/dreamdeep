@@ -45,6 +45,18 @@ def shift(var, sx, sy):
     """
     return np.roll(np.roll(var, sx, -1), sy, -2)
 
+def clip(img, dataset_means):
+    """
+    Assumes input image comes:
+        -in BGR.
+        -in shape (channels, height, width).
+        -in float.
+    """
+    for ch_num, ch_name in enumerate("bgr"):
+        mean = dataset_means[ch_name]
+        img[ch_num, :, :] = np.clip(img[ch_num, :, :], -mean, 255-mean)
+    return img
+
 def pre_process(img, dataset_means):
     """
     Processes input image for network.
@@ -168,7 +180,7 @@ class DeepDream:
             inputs=[img, learning_rate], outputs=[new_img],
         )
 
-    def make_pass(self, img, learning_rate, jitter_shift, clip=False):
+    def make_pass(self, img, learning_rate, jitter_shift, dataset_means=None):
         """
         Wrapper for _make_pass, applies random jitter shift and maybe clips.
         """
@@ -188,8 +200,8 @@ class DeepDream:
         img = shift(img, -sx, -sy)
 
         #clipping if needed
-        if clip:
-            return np.clip(img, -255, 255)
+        if dataset_means is not None:
+            return clip(img, dataset_means)
         else:
             return img
 
@@ -224,7 +236,8 @@ class DeepDream:
             result = octave_base + detail
 
             for i in range(n_iters):
-                print("in octave #{}, iteration #{}...".format(octave, i))
+                print("in octave #{}, iteration #{}...".format(octave, i),
+                    end="    \r")
 
                 #dream step
                 result = self.make_pass(result, **step_params)
@@ -245,6 +258,7 @@ class DeepDream:
             #extracting details produced on the current octave
             detail = result - octave_base
 
+        print("\rend of processing.")
         return de_process(result, nets.NETS_MEANS[self.net_name])
 
 def print_usage_and_exit():
@@ -275,8 +289,9 @@ def main():
     print("deepdreaming...", flush=True, end=" ")
     result = model.dream(img,
         n_octaves=n_octaves, n_iters=n_iters, octave_scale=octave_scale,
-        learning_rate=learning_rate, jitter_shift=JITTER_SHIFT, clip=CLIP,
-        save_steps=SAVE_STEPS, show_steps=SHOW_STEPS)
+        learning_rate=learning_rate, jitter_shift=JITTER_SHIFT,
+        save_steps=SAVE_STEPS, show_steps=SHOW_STEPS,
+        dataset_means=nets.NETS_MEANS[model.net_name] if CLIP else None)
     print("done.")
 
     result_fp = "{}_dream.jpg".format(img_fp.split(".")[0])
