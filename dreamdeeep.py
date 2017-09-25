@@ -13,19 +13,22 @@ import nets
 import sys
 from collections import deque
 from PIL import Image
-from matplotlib import pyplot as plt
+try:
+    from matplotlib import pyplot as plt
+except:
+    print("WARNING: could not import matplotlib.pyplot")
 
 #network name, see nets module for supported nets
 NET_NAME = "googlenet"
 #layer to maximize output
-NET_LAYER_OUTPUT = "inception_4c/output"
+NET_LAYER_OUTPUT = "inception_4e/output"
 #weights for chosen net
 NET_WEIGHTS_FILEPATH = "/home/erik/data/blvc_googlenet.pkl"
 
 #default number of octaves
 N_OCTAVES = 4
 #default number of iterations per octave
-N_ITERS = 10
+N_ITERS = 16
 #default octave scale
 OCTAVE_SCALE = 1.4
 #default learning rate
